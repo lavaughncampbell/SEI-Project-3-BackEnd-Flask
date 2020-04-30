@@ -1,5 +1,5 @@
 # this is like your server.js in express it holds all the important info
-from Flask import Flask # similar to const express = require('express')
+from flask import Flask # similar to const express = require('express')
 
 
 DEBUG=True # this will print nice helpful errors messages since we are developing
@@ -10,8 +10,10 @@ app = Flask(__name__) # this is similar to const app = express()
 
 
 
-
-
+#here is how you write a route in Flask
+@app.route('/') # @ symbol here means this is decorator
+def hello():
+  return 'Hello, world!'
 
 
 
