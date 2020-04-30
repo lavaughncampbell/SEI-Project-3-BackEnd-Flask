@@ -5,5 +5,5 @@ The concept of the app is a social media app where bootcamp students, alumni, an
 
 
 
-## Data Relations / Models
-![GitHub Logo](https://i.imgur.com/BNbEShG.png)
+### Data Relations / Models
+![GitHub Logo](https://i.imgur.com/tzpShja.png)
