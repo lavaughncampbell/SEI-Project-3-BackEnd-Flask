@@ -7,6 +7,10 @@ from flask import Blueprint, request, jsonify # Blueprint is how we make our con
 
 from flask_bcrypt import generate_password_hash # to generate password hash
                         # this is a function that returns a scrambled pw
+
+from playhouse.shortcuts import model_to_dict
+# we can jsonify our models with this import
+
 # make this a blueprint
 users = Blueprint('users', 'users')
 
@@ -68,6 +72,17 @@ def register():
 
     print(created_user)
 
-  # respond with new object and success message
+    # respond with new object and success message
 
-  return "check terminal"
+    # jsonify our models
+    created_user_dict = model_to_dict(created_user)
+    # we can't jsonify the password (generate_password_has gives us
+    print(type(created_user_dict['password']))
+    # this will get rid of the error
+    created_user_dict.pop('password')
+
+    return jsonify(
+      data=created_user_dict,
+      message="Successfully registered user",
+      status=201
+    ), 201
