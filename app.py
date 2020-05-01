@@ -3,6 +3,12 @@ from flask import Flask, jsonify # similar to const express = require('express')
 # we're now also importing jsonify from flask
 # jsonify let's us send JSON HTTP responses (like res.json)
 
+
+
+
+from resources.users import users # import blueprint from
+# resources.users
+
 # in python when you import a file, you get everything in the "global scope"
 # this import models will import everything.
 # so this statement will import all variables and methods/function from that
@@ -11,6 +17,8 @@ from flask import Flask, jsonify # similar to const express = require('express')
 # anything in models.py
 # google out "namespacing in python and importing"
 import models # so everything is ready when we start our app.
+
+from flask_cors import CORS # importing CORS here
 
 # we need to import and configure the login manager
 # the login manager is the main tool for coordinating sessions and login stuff in our app.
@@ -32,9 +40,13 @@ app.secret_key = "Making. Sommething Very. This is a huge secret."
 login_manager = LoginManager()
 
 # 3. actually connect the app with the login manager. Doing this b/c docs says so.
+login_manager.init_app(app)
+
+CORS(users, origins=['http://localhost:3000'],
+  supports_credentials=True)
 
 
-
+app.register_blueprint(users, url_prefix='/api/v1/users')
 
 
 #here is how you write a route in Flask
