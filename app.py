@@ -12,12 +12,28 @@ from flask import Flask, jsonify # similar to const express = require('express')
 # google out "namespacing in python and importing"
 import models # so everything is ready when we start our app.
 
+# we need to import and configure the login manager
+# the login manager is the main tool for coordinating sessions and login stuff in our app.
+from flask_login import LoginManager
 
 DEBUG=True # this will print nice helpful errors messages since we are developing
 PORT=8000
 
 # this is similar to const app = express()
 app = Flask(__name__) # instantiating the Flask class to create an app
+
+
+# configuring the LoginManager, according to this:
+# we need to do several things
+# 1. setup a secret/key for sessions
+app.secret_key = "Making. Sommething Very. This is a huge secret."
+
+# 2. instantiate the LoginManager to actually get a login_manager
+login_manager = LoginManager()
+
+# 3. actually connect the app with the login manager. Doing this b/c docs says so.
+
+
 
 
 
