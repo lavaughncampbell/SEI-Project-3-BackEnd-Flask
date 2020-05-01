@@ -5,12 +5,18 @@ import models # get all the models. specifically user model
 
 from flask import Blueprint, request # Blueprint is how we make our controllers
 
+from flask_bcrypt import generate_password_hash # to generate password hash
+                        # this is a function that returns a scrambled pw
 # make this a blueprint
 users = Blueprint('users', 'users')
 
 @users.route('/', methods=['GET'])
 def test_user_resource():
   return "user resource works"
+
+
+# REGISTRATION PROCESS //
+
 
 # registration will be POST because were sending
 # req.body there is going to be JSON
@@ -21,5 +27,41 @@ def register():
   # note: we had to send JSON from postman(choose raw, select
   # JSON from the drop down menu, and type a perfect JSON object with
   # double qoutes around the keys
-  print(request.get_json())
+  payload = request.get_json()
+  print(payload)
+
+  # since emails are case insensitive in the world
+  # this makes the email lowercase
+  payload['email'] = payload['email'].lower()
+  # might as well do the same with username
+  payload['username'] = payload['username'].lower()
+  print(payload) # that's better
+
+# see if the user exists
+  try:
+
+    models.User.get(models.User.email == payload['email'])
+  # this will throw an eror ()
+  # shortcut method for select().where().execute_query is .get()
+# if so -- we don't want to create the user
+  # response: "user with that email already exist"
+# if the user does not exist
+  except models.DoesNotExist: # except is like catch in JS
+  # create them!
+
+    pw_hash = generate_password_hash(payload['password'])
+
+    created_user = models.User.create(
+      username=payload['username'],
+      email=payload['email'],
+      password=pw_hash,
+      name=payload['name'],
+      bootcamp=payload['bootcamp'],
+      position=payload['position']
+    )
+
+    print(created_user)
+
+  # respond with new object and success message
+
   return "check terminal"
