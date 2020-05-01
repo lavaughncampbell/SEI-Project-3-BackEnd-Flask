@@ -3,7 +3,7 @@
 
 import models # get all the models. specifically user model
 
-from flask import Blueprint, request # Blueprint is how we make our controllers
+from flask import Blueprint, request, jsonify # Blueprint is how we make our controllers
 
 from flask_bcrypt import generate_password_hash # to generate password hash
                         # this is a function that returns a scrambled pw
@@ -45,6 +45,12 @@ def register():
   # shortcut method for select().where().execute_query is .get()
 # if so -- we don't want to create the user
   # response: "user with that email already exist"
+    return jsonify(
+      data={},
+      message="A user with that email already exists",
+      status=401
+    ), 401
+
 # if the user does not exist
   except models.DoesNotExist: # except is like catch in JS
   # create them!
