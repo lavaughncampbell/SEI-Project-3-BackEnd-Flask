@@ -157,3 +157,22 @@ def login():
       status=401
     ), 401
 
+
+
+
+# TEMPORARY HELPER ROUTE GET /api/v1/users/all
+
+
+# temporary helper route, it will list the users, so we an pick an id
+# and use that id to manually create a post connected to a user
+# we might delete this later, it's ujust a tool for building / testing API
+@users.route('/all', methods=['GET'])
+def user_index():
+  users = models.User.select()
+  user_dicts = [model_to_dict(user) for user in users ]
+
+  # remove the passwords
+  for user_dict in user_dicts:
+    user_dict.pop('password')
+
+  return jsonify(user_dicts), 200

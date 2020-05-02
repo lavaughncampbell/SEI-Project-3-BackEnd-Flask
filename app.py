@@ -42,6 +42,21 @@ login_manager = LoginManager()
 # 3. actually connect the app with the login manager. Doing this b/c docs says so.
 login_manager.init_app(app)
 
+
+# in reg and login, we did login_user(user that was found or created)
+# doing that stored the ID of that user in the session
+# but in our routes we want to work with the user object
+# so we need to set it up so that the user object is landed
+# when user is logged in
+@login_manager.user_loader
+def load_user(user_id):
+  try:
+    return models.User.get(user_id)
+  except models.DoesNotExist:
+    return None
+
+
+
 CORS(users, origins=['http://localhost:3000'],
   supports_credentials=True)
 
