@@ -10,7 +10,7 @@ from flask_bcrypt import generate_password_hash, check_password_hash # to genera
 
 from playhouse.shortcuts import model_to_dict
 # we can jsonify our models with this import
-from flask_login import login_user, current_user # login_user will be used to do the session stuff we did manually in express.
+from flask_login import login_user, current_user, logout_user # login_user will be used to do the session stuff we did manually in express.
 
 
 
@@ -23,7 +23,11 @@ def test_user_resource():
   return "user resource works"
 
 
-# REGISTRATION PROCESS //
+
+
+
+# <-------------------------------------->
+# REGISTRATION ROUTE //
 
 
 # registration will be POST because were sending
@@ -99,8 +103,8 @@ def register():
 
 
 
-
-# LOGIN PROCESS //
+# <-------------------------------------->
+# LOGIN ROUTE //
 
 # there is no route to show a register / login forms
 # we dont need to the react will have the forms handled for us
@@ -191,3 +195,28 @@ def get_logged_in_user():
   # OBSERVE -- YOU now have access to the currently logged in user
   # anywhere you want using current_user
   return jsonify(data=user_dict), 200
+
+
+
+
+
+
+
+
+
+# <-------------------------------------->
+  # LOGOUT ROUTE //
+
+  # we need a logout route
+  # you have noticed that the session persists (i.e. user is still logged in )
+  # after restarting the server
+  # weird.
+@users.route('/logout', methods=['GET'])
+def logout():
+  logout_user()
+  return jsonify(
+    data={},
+    message="Successfully logged out.",
+    status=200
+  ), 200
+

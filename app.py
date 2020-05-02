@@ -51,6 +51,11 @@ login_manager.init_app(app)
 @login_manager.user_loader # this allows us to access our User Object
 def load_user(user_id):
   try:
+    print("loading the following user")
+    user = models.User.get_by_id(user_id) # IMPORTANT CHANGE
+                                          # USE GET_BY_ID
+                                          # Docs seem wrong
+
     return models.User.get(user_id)
   except models.DoesNotExist:
     return None
