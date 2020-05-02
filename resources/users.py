@@ -189,12 +189,27 @@ def user_index():
 
 @users.route('/logged_in_user', methods=['GET'])
 def get_logged_in_user():
+
+  # you can tell if a user is logged in using
+  # current_user.is_authenticated
+  if not current_user.is_authenticated:
+    return jsonify(
+      data={},
+      message="No user is currently logged in",
+      status=401,
+    ), 401
+
+  else:
   # we can access current_user bc we called login_user and set up user_loader
   user_dict = model_to_dict(current_user)
   user_dict.pop('password')
   # OBSERVE -- YOU now have access to the currently logged in user
   # anywhere you want using current_user
-  return jsonify(data=user_dict), 200
+  return jsonify(
+    data=user_dict,
+    message=f"Currently logged in as {user_dict['email']}.",
+    status=200
+  ), 200
 
 
 
