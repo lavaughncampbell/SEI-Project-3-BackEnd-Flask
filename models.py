@@ -28,8 +28,6 @@ from flask_login import UserMixin
 
 
 
-
-
 # What is Sqlite?
 
 # sqlite lets you store your entire database in just a file

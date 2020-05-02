@@ -48,7 +48,7 @@ login_manager.init_app(app)
 # but in our routes we want to work with the user object
 # so we need to set it up so that the user object is landed
 # when user is logged in
-@login_manager.user_loader
+@login_manager.user_loader # this allows us to access our User Object
 def load_user(user_id):
   try:
     return models.User.get(user_id)

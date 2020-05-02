@@ -10,7 +10,7 @@ from flask_bcrypt import generate_password_hash, check_password_hash # to genera
 
 from playhouse.shortcuts import model_to_dict
 # we can jsonify our models with this import
-from flask_login import login_user # this will be used to do the session stuff we did manually in express.
+from flask_login import login_user, current_user # login_user will be used to do the session stuff we did manually in express.
 
 
 
@@ -111,7 +111,7 @@ def login():
   payload['username'] = payload['username'].lower()
 
   try:
-    user = models.User.get(model.User.email == payload['email'])
+    user = models.User.get(models.User.email == payload['email'])
 
     user_dict = model_to_dict(user)
     # check pw using bcrypt
@@ -176,3 +176,18 @@ def user_index():
     user_dict.pop('password')
 
   return jsonify(user_dicts), 200
+
+  # another route for just demonstration
+  # it will j=show us who is logged in
+  # once you logged in user you can him with current_user
+  # we can access via current_user
+  # this is what setting up user_load in our app.py allowed us to do
+
+@users.route('/logged_in_user', methods=['GET'])
+def get_logged_in_user():
+  # we can access current_user bc we called login_user and set up user_loader
+  user_dict = model_to_dict(current_user)
+  user_dict.pop('password')
+  # OBSERVE -- YOU now have access to the currently logged in user
+  # anywhere you want using current_user
+  return jsonify(data=user_dict), 200
