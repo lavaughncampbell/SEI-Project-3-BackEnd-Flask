@@ -28,7 +28,7 @@ posts = Blueprint('posts', 'posts')
 # POST INDEX ROUTE
 @posts.route('/', methods=['GET'])
 def posts_index():
-  results = models.Dog.select()
+  results = models.Post.select()
 
   print('result of dog select query')
   print(result)
@@ -36,7 +36,15 @@ def posts_index():
   for row in result:
     print(row)
 
-  return "check your terminal"
+  post_dicts = [model_to_dict(post) for post in result]
+
+  print(post_dicts)
+
+  return jsonify({
+    'data': post_dicts,
+    'message': f"Successfully found {len(post_dicts)} dogs",
+    'status': 200
+  }), 200
 
 
 
