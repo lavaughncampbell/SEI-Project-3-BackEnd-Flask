@@ -16,8 +16,13 @@ posts = Blueprint('posts', 'posts')
 
 
 
-# POST INDEX
-@posts.route('/')
+# POST INDEX ROUTE
+@posts.route('/', methods=['GET'])
 def posts_index():
   return "posts resource working"
 
+# POST CREATE ROUTE
+# note: for this route you need a trailing slash (i.e. /)
+@posts.route('/', methods=['POST'])
+def create_dog():
+  return "you hit dog create route"

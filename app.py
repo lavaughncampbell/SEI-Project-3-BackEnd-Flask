@@ -6,6 +6,7 @@ from flask import Flask, jsonify # similar to const express = require('express')
 
 
 from resources.posts import posts # import blueprint from resources.posts
+                                  # think "const dogController = require('./controllers/dogController.js')
 from resources.users import users # import blueprint from
 # resources.users
 
