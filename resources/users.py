@@ -201,8 +201,8 @@ def get_logged_in_user():
 
   else:
   # we can access current_user bc we called login_user and set up user_loader
-  user_dict = model_to_dict(current_user)
-  user_dict.pop('password')
+    user_dict = model_to_dict(current_user)
+    user_dict.pop('password')
   # OBSERVE -- YOU now have access to the currently logged in user
   # anywhere you want using current_user
   return jsonify(

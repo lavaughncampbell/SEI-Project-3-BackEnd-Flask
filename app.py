@@ -5,7 +5,7 @@ from flask import Flask, jsonify # similar to const express = require('express')
 
 
 
-
+from resources.posts import posts # import blueprint from resources.posts
 from resources.users import users # import blueprint from
 # resources.users
 
@@ -64,8 +64,10 @@ def load_user(user_id):
 
 CORS(users, origins=['http://localhost:3000'],
   supports_credentials=True)
+CORS(posts, origins=['http://localhost:3000'],
+  supports_credentials=True)
 
-
+app.register_blueprint(posts, url_prefix='/api/v1/posts')
 app.register_blueprint(users, url_prefix='/api/v1/users')
 
 
