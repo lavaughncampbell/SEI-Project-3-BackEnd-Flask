@@ -46,23 +46,7 @@ DATABASE = SqliteDatabase('project3DB.sqlite') # you can name it what you want
 # similar to MONGO_DB_URL = mongodb://localhost/dogs, {...} in unit 2
 # there will be a file in our project called dogs.sqlite // mine will be project3DB.sqlite
 
-
-# define our Dog model
-
-class Post(Model): # Post will inherit a model. Similar to model schema in express.
-# in express we gave a name of each field and a data type
-  description = CharField() # string
-  user = CharField() # string for now, let we will implement a relation
-  comment = CharField() # string
-  # this is how you specify default values
-  created_at: DateTimeField(default=datetime.datetime.now) #stake datetime has to be imported at top
-
-  # inside the dog mdoel special constructor that gives our model/class instructions on
-  # how to connect to a DB & where to store its data
-  # specify this when you define a model.
-  class Meta:
-    database = DATABASE
-
+# define our user model
 
 # our User class (model) will inherit from this UserMixin
 # to behave correctly in flask_login's session/login/etc functionality,
@@ -78,6 +62,36 @@ class User(UserMixin, Model): # all models must inherit from models
 
   class Meta:
     database = DATABASE
+
+
+
+
+
+# define our Dog model
+
+class Post(Model): # Post will inherit a model. Similar to model schema in express.
+# in express we gave a name of each field and a data type
+  description = CharField() # string
+
+  # to set up our ONE TO MANY relationship between users and posts
+  # we need a foreign key -- post "belongs" to user
+  user = ForeignKeyField(User, backref='posts')
+  # if we had a post model instance in a var i.e. some_post
+  # this Foreign key will let us go some_post.user to get the user that owns that post
+  # the backref -- if we had a user model instance, i.e. some_user,
+  # the backref -- will let us go some_user.posts to get a list of post
+
+  comment = CharField() # string
+  # this is how you specify default values
+  created_at: DateTimeField(default=datetime.datetime.now) #stake datetime has to be imported at top
+
+  # inside the dog mdoel special constructor that gives our model/class instructions on
+  # how to connect to a DB & where to store its data
+  # specify this when you define a model.
+  class Meta:
+    database = DATABASE
+
+
 
 # define a method that will get called when the app starts
 # (in app.py) to set up our database connection

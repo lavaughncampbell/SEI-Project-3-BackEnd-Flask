@@ -5,11 +5,15 @@ import models # get all the models. specifically user model
 
 from flask import Blueprint, request, jsonify # Blueprint is how we make our controllers
 
-from flask_bcrypt import generate_password_hash # to generate password hash
+from flask_bcrypt import generate_password_hash, check_password_hash # to generate password hash
                         # this is a function that returns a scrambled pw
 
 from playhouse.shortcuts import model_to_dict
 # we can jsonify our models with this import
+from flask_login import login_user # this will be used to do the session stuff we did manually in express.
+
+
+
 
 # make this a blueprint
 users = Blueprint('users', 'users')
@@ -51,7 +55,7 @@ def register():
   # response: "user with that email already exist"
     return jsonify(
       data={},
-      message="A user with that email already exists",
+      message=f"A user with that email {payload['email']} already exists",
       status=401
     ), 401
 
@@ -72,6 +76,10 @@ def register():
 
     print(created_user)
 
+    # this is where we will actually use flask-login
+    # this "logs" in user and starts a session
+    login_user(created_user)
+
     # respond with new object and success message
 
     # jsonify our models
@@ -83,6 +91,69 @@ def register():
 
     return jsonify(
       data=created_user_dict,
-      message="Successfully registered user",
+      message=f"Successfully registered user {created_user_dict['email']}",
       status=201
     ), 201
+
+
+
+
+
+
+# LOGIN PROCESS //
+
+# there is no route to show a register / login forms
+# we dont need to the react will have the forms handled for us
+@users.route('/login', methods=['POST'])
+def login():
+  payload = request.get_json()
+  payload['email'] = payload['email'].lower()
+  payload['username'] = payload['username'].lower()
+
+  try:
+    user = models.User.get(model.User.email == payload['email'])
+
+    user_dict = model_to_dict(user)
+    # check pw using bcrypt
+    # check password has 2 args
+    # the encrypted pw you are checking against
+    # the pw attempt you are verifying
+    password_is_good = check_password_hash(user_dict['password'], payload['password'])
+
+    if(password_is_good):
+      # LOG THE USER IN!!!! using Flask-Login!
+      login_user(user) # in express we did this manually by stuff in session
+
+
+      # respond -- all good -- remove the pw first
+      user_dict.pop('password')
+
+      return jsonify(
+        data=user_dict,
+        message=f"Successfully logged in {user_dict['email']}",
+        status=200
+      ), 200
+
+    # else if pw is bad
+    else:
+      print('pw is no good')
+      # respond -- bad username or password
+      return jsonify(
+        date={},
+        message="Email or password is incorrect",
+        status=401
+      ), 401
+
+
+
+
+  except models.DoesNotExist:
+  # else if they don't exist
+    print('username is no good')
+    # respond -- bad username or password
+    return jsonify(
+      date={},
+      message="Email or password is incorrect",
+      status=401
+    ), 401
+
