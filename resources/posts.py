@@ -182,4 +182,22 @@ def update_post(id):
       status=403
       ), 403
 
-    
+
+
+# <-------------------------------------->
+# POST SHOW ROUTE 
+@posts.route('</id>', methods=['GET'])
+def show_post(id):
+  post = models.Post.get_by_id(id)
+
+
+  # if user not logged in, the can only see description and commend 
+  if not current_user.is_authenticated:
+    return jsonify(
+      data={
+        'description': post.description, 
+        'comment': post.comment
+      }, 
+      message="Registered users can see more info about this post", 
+      status=200
+    ), 200
