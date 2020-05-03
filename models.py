@@ -50,6 +50,11 @@ DATABASE = SqliteDatabase('project3DB.sqlite') # you can name it what you want
 # to behave correctly in flask_login's session/login/etc functionality,
 # The User class must have certain methods and properties that a standard
 # Peewee model (like Dog, e.g.) doesn't have
+
+
+
+# <-------------------------------------->
+# DEFINE USER MODEL 
 class User(UserMixin, Model): # all models must inherit from models
   username = CharField(unique=True)
   email = CharField(unique=True)
@@ -65,7 +70,12 @@ class User(UserMixin, Model): # all models must inherit from models
 
 
 
-# define our Post model
+
+
+
+
+# <-------------------------------------->
+# DEFINE POST MODEL 
 
 class Post(Model): # Post will inherit a model. Similar to model schema in express.
 # in express we gave a name of each field and a data type
@@ -91,6 +101,10 @@ class Post(Model): # Post will inherit a model. Similar to model schema in expre
     database = DATABASE
 
 
+
+
+# <-------------------------------------->
+# INTIALIZE FUNCTION
 
 # define a method that will get called when the app starts
 # (in app.py) to set up our database connection

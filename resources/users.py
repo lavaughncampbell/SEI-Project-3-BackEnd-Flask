@@ -40,7 +40,7 @@ def register():
   # JSON from the drop down menu, and type a perfect JSON object with
   # double qoutes around the keys
   payload = request.get_json()
-  print(payload)
+  # print(payload)
 
   # since emails are case insensitive in the world
   # this makes the email lowercase

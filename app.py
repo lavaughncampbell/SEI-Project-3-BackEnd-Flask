@@ -32,6 +32,16 @@ PORT=8000
 app = Flask(__name__) # instantiating the Flask class to create an app
 
 
+
+# CORS - Cross Origin Resource Sharing 
+# a web domain (site/port/etc) is an "origin"
+# this app is localhost: 8000 that's an "origin"
+# our react app is localhost:3000 that's an origin 
+# Browsers implement CORS to prevent a JS app from sending requests 
+# Configuring CORS lets server say "heres' whatr im expecting to hear from"
+
+
+
 # configuring the LoginManager, according to this:
 # we need to do several things
 # 1. setup a secret/key for sessions
@@ -49,6 +59,11 @@ login_manager.init_app(app)
 # but in our routes we want to work with the user object
 # so we need to set it up so that the user object is landed
 # when user is logged in
+
+
+# <-------------------------------------->
+# LOGIN MANAGER 
+
 @login_manager.user_loader # this allows us to access our User Object
 def load_user(user_id):
   try:
@@ -62,15 +77,44 @@ def load_user(user_id):
     return None
 
 
+@login_manager.unauthorized_handler
+def unauthorized():
+  return jsonify(
+    data={
+      'error': 'User not logged in'
+    }, 
+    message="You must be logged in to access that resource", 
+    status=401
+  ), 401
+
+
+
+
+# <-------------------------------------->
+# CORS -- Cross Origin Resource Sharing 
 
 CORS(users, origins=['http://localhost:3000'],
   supports_credentials=True)
 CORS(posts, origins=['http://localhost:3000'],
   supports_credentials=True)
 
+
+
+
+# <-------------------------------------->
+# BLUEPRINTS (Controller of the app)
+
 app.register_blueprint(posts, url_prefix='/api/v1/posts')
 app.register_blueprint(users, url_prefix='/api/v1/users')
 
+
+
+
+
+
+
+# <-------------------------------------->
+# TEST ROUTES 
 
 #here is how you write a route in Flask
 @app.route('/') # @ symbol here means this is decorator
@@ -154,7 +198,8 @@ def say_hello(username): # this func take the URL param as an argument
 
 
 
-
+# <-------------------------------------->
+# LISTENER  
 
 # this is similar to app.listen() in express
 # it goes at the bottom. __name__ being '__main___'
