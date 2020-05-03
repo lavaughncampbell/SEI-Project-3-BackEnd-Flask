@@ -132,12 +132,54 @@ def delete_post(id):
         status=403
       ), 403
 
-    except models.DoesNotExist:
-      return jsonify(
-        data={
-          'error': '404 Not found'
-        }, 
-        message="There is no post with that ID.", 
-        status=404
+  except models.DoesNotExist:
+    return jsonify(
+      data={
+        'error': '404 Not found'
+      }, 
+      message="There is no post with that ID.", 
+      status=404
       ), 404
 
+
+
+
+# <-------------------------------------->
+# POST UPDATE ROUTE 
+@posts.route('<id>', methods=['PUT'])
+@login_required # you got no business changing data if your not logged in
+def update_post(id):
+  payload = request.get_json()
+
+  # get the post 
+  post_to_update = models.Post.get_by_id(id)
+
+  # see if the post belongs to the logged in user 
+  if post_to_update.user.id == current_user.id:
+    if 'description' in payload:
+      post_to_update.description == payload['description']
+    if 'comment' in payload: 
+      post_to_update.comment == payload['comment']
+
+    post_to_update.save() # this is nice, ORMs are great 
+
+    updated_post_dict = model_to_dict(post_to_update)
+
+    updated_post_dict['user'].pop('password') 
+
+    return jsonify(
+      data=updated_post_dict, 
+      message=f"Successfully updated post with id {id}", 
+      status=200
+    ), 200 
+
+  else:
+    return jsonify(
+      data={
+        'error': '403 Forbidden'
+      }, 
+      message="Post user's id does not match post id, User can only update their own posts.", 
+      status=403
+      ), 403
+
+    
