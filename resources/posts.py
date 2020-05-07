@@ -153,15 +153,20 @@ def update_post(id):
 
   # get the post 
   post_to_update = models.Post.get_by_id(id)
-
+  print("HERE IS UPDATED HERE")
+  print(post_to_update)
+  print("THIS IS THE POST description")
+  print(post_to_update.description)
+  print('HERE IS PAYLOAD!')
+  print(payload)
   # see if the post belongs to the logged in user 
   if post_to_update.user.id == current_user.id:
-    if 'description' in payload:
-      post_to_update.description == payload['description']
-    if 'comment' in payload: 
-      post_to_update.comment == payload['comment']
+    # if 'description' in payload:
+    post_to_update.description = payload['description']
+    # if 'comment' in payload: 
+    post_to_update.comment = payload['comment']
 
-    post_to_update.save() # this is nice, ORMs are great 
+    # post_to_update.save() # this is nice, ORMs are great 
 
     updated_post_dict = model_to_dict(post_to_update)
 
@@ -190,6 +195,8 @@ def update_post(id):
 def show_post(id):
   post = models.Post.get_by_id(id)
 
+  post_dict = model_to_dict(post)
+
 
   # if user not logged in, the can only see description and commend 
   if not current_user.is_authenticated:
@@ -201,3 +208,16 @@ def show_post(id):
       message="Registered users can see more info about this post", 
       status=200
     ), 200
+
+  else:
+    return jsonify({
+    'data': post_dict, 
+    'message': f"Successfully found posts",
+    'status': 200
+  }), 200
+
+
+
+
+
+
