@@ -146,7 +146,7 @@ def delete_post(id):
 
 # <-------------------------------------->
 # POST UPDATE ROUTE 
-@posts.route('<id>', methods=['PUT'])
+@posts.route('/<id>', methods=['PUT'])
 @login_required # you got no business changing data if your not logged in
 def update_post(id):
   payload = request.get_json()
@@ -186,7 +186,7 @@ def update_post(id):
 
 # <-------------------------------------->
 # POST SHOW ROUTE 
-@posts.route('</id>', methods=['GET'])
+@posts.route('/<id>', methods=['GET'])
 def show_post(id):
   post = models.Post.get_by_id(id)
 
